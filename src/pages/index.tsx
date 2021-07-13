@@ -1,56 +1,120 @@
 import {
-  Link as ChakraLink,
-  Text,
-  Code,
-  List,
-  ListIcon,
-  ListItem,
-} from '@chakra-ui/react'
-import { CheckCircleIcon, LinkIcon } from '@chakra-ui/icons'
+  Center,
+  Container,
+  Grid,
+  GridItem,
+  GridItemProps,
+  Heading,
+  Input,
+} from "@chakra-ui/react"
+import * as math from "mathjs"
+import { useState } from "react"
 
-import { Hero } from '../components/Hero'
-import { Container } from '../components/Container'
-import { Main } from '../components/Main'
-import { DarkModeSwitch } from '../components/DarkModeSwitch'
-import { CTA } from '../components/CTA'
-import { Footer } from '../components/Footer'
+export default function IndexPage() {
+  const [currentValue, setCurrentValue] = useState("0")
+  const [total, setTotal] = useState([])
 
-const Index = () => (
-  <Container height="100vh">
-    <Hero />
-    <Main>
-      <Text>
-        Example repository of <Code>Next.js</Code> + <Code>chakra-ui</Code> +{' '}
-        <Code>typescript</Code>.
-      </Text>
+  function evaluate() {
+    const expression = total.join("")
+    const result = math.evaluate(expression)
+    setCurrentValue(result)
+    setTotal([result])
+  }
 
-      <List spacing={3} my={0}>
-        <ListItem>
-          <ListIcon as={CheckCircleIcon} color="green.500" />
-          <ChakraLink
-            isExternal
-            href="https://chakra-ui.com"
-            flexGrow={1}
-            mr={2}
-          >
-            Chakra UI <LinkIcon />
-          </ChakraLink>
-        </ListItem>
-        <ListItem>
-          <ListIcon as={CheckCircleIcon} color="green.500" />
-          <ChakraLink isExternal href="https://nextjs.org" flexGrow={1} mr={2}>
-            Next.js <LinkIcon />
-          </ChakraLink>
-        </ListItem>
-      </List>
-    </Main>
+  function clear() {
+    setCurrentValue("0")
+    setTotal([])
+  }
 
-    <DarkModeSwitch />
-    <Footer>
-      <Text>Next ❤️ Chakra</Text>
-    </Footer>
-    <CTA />
-  </Container>
-)
+  function handleClick(value: string | number) {
+    if (value === "equals") {
+      return evaluate()
+    }
+    if (value === "clear") {
+      return clear()
+    }
 
-export default Index
+    setTotal([...total, value])
+  }
+
+  interface CenteredGridItemProps extends GridItemProps {
+    value: string | number
+    label: string | number
+  }
+
+  const CenteredGridItem = (props: CenteredGridItemProps) => (
+    <GridItem
+      {...props}
+      border="1px solid grey"
+      onClick={() => handleClick(props.value)}
+    >
+      <Center h="100%">{props.label}</Center>
+    </GridItem>
+  )
+
+  return (
+    <Container height="100vh">
+      <Grid
+        border=".5px solid grey"
+        mt="5"
+        templateRows="repeat(6,1fr)"
+        templateColumns="repeat(4, 1fr)"
+      >
+        <GridItem colSpan={4} rowSpan={1}>
+          <Input
+            value={currentValue}
+            onChange={e => {
+              setTotal([...total, e.target.value])
+            }}
+          />
+        </GridItem>
+        <CenteredGridItem label="C" value="clear" colSpan={2}>
+          C
+        </CenteredGridItem>
+        <CenteredGridItem label="%" value="%">
+          %
+        </CenteredGridItem>
+        <CenteredGridItem label="/" value="/">
+          /
+        </CenteredGridItem>
+        {[7, 8, 9].map(item => (
+          <CenteredGridItem label={item} value={item}>
+            1
+          </CenteredGridItem>
+        ))}
+        <CenteredGridItem label="x" value="*">
+          x
+        </CenteredGridItem>
+        {[4, 5, 6].map(item => (
+          <CenteredGridItem label={item} value={item}>
+            1
+          </CenteredGridItem>
+        ))}
+
+        <CenteredGridItem label="-" value="-">
+          -
+        </CenteredGridItem>
+        {[1, 2, 3].map(item => (
+          <CenteredGridItem label={item} value={item}>
+            1
+          </CenteredGridItem>
+        ))}
+
+        <CenteredGridItem label="+" value="+">
+          +
+        </CenteredGridItem>
+        <CenteredGridItem label="0" value="0" colSpan={2}>
+          0
+        </CenteredGridItem>
+        <CenteredGridItem label="." value=".">
+          .
+        </CenteredGridItem>
+        <CenteredGridItem label="=" value="equals">
+          =
+        </CenteredGridItem>
+      </Grid>
+      <Heading>Total: {currentValue}</Heading>
+      <Heading>Current: {total}</Heading>
+    </Container>
+  )
+}
