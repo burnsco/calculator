@@ -5,7 +5,7 @@ import {
   GridItem,
   GridItemProps,
   Heading,
-  Input,
+  Input
 } from "@chakra-ui/react"
 import * as math from "mathjs"
 import { useState } from "react"
@@ -78,7 +78,7 @@ export default function IndexPage() {
           /
         </CenteredGridItem>
         {[7, 8, 9].map(item => (
-          <CenteredGridItem label={item} value={item}>
+          <CenteredGridItem key={item} label={item} value={item}>
             1
           </CenteredGridItem>
         ))}
@@ -86,7 +86,7 @@ export default function IndexPage() {
           x
         </CenteredGridItem>
         {[4, 5, 6].map(item => (
-          <CenteredGridItem label={item} value={item}>
+          <CenteredGridItem key={item} label={item} value={item}>
             1
           </CenteredGridItem>
         ))}
@@ -95,7 +95,7 @@ export default function IndexPage() {
           -
         </CenteredGridItem>
         {[1, 2, 3].map(item => (
-          <CenteredGridItem label={item} value={item}>
+          <CenteredGridItem key={item} label={item} value={item}>
             1
           </CenteredGridItem>
         ))}
